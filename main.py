@@ -7,4 +7,5 @@ if __name__ == '__main__':
     print('Product Price Comparison')
     item = iPrice.search()
     result = iPrice.extract(item)
-    iPrice.view(result)
+    print(result)
+    # iPrice.view(result)
