@@ -29,9 +29,10 @@ def extract(input):
         soup = soup.find('div',{'class':'default-offers'})
         products = soup.findAll('div', {'class': 'r2 oU I'})
         for i in products:
-            dictOfContent = {"product":"", "price":""}
+            dictOfContent = {"product":"", "price":"", "link":""}
             dictOfContent['product'] = i.find('p',{'class': "oz b R e3"}).text
             dictOfContent['price'] = i.find('div', {'class': 'vb f24 b gM c2'}).text
+            dictOfContent['link'] = 'iprice.co.id' + i.find('a', href=True)['href']
             result['content'].append(dictOfContent)
         result['status'] = "Succeed"
 
@@ -39,7 +40,7 @@ def extract(input):
 
 def view(result):
     print(result['title'])
-    print(result['content'])
-    # for i in result['content']:
-    #     print(i)
+    # print(result['content'])
+    for i in result['content']:
+        print(i)
     print(result['status'])
