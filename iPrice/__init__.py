@@ -33,34 +33,6 @@ def extract(input):
             dictOfContent['product'] = i.find('p',{'class': "oz b R e3"}).text
             dictOfContent['price'] = i.find('div', {'class': 'vb f24 b gM c2'}).text
             result['content'].append(dictOfContent)
-        # print(price)
-        # print(product)
-        # j = 0
-        # for i in product:
-        #     # if i is not None:
-        #     print(f'product adalah : {j}{i}')
-        #     result['contents']['products'].append(i.find('p', {'class': "oz b R e3"}).text)
-        #     # j = j + 1
-        #     # else:
-        #     #     result['contents'][j]['products'] = ""
-        #     #     j += 1
-        # j = 0
-        # for i in price:
-        #     # if i is not None:
-        #     result['contents']['prices'].append(i.find('div', {'class': 'vb f24 b gM c2'}).text)
-        #     # j = j + 1
-        #     # else:
-        #     #     result['contents'][j]['prices'] = ""
-        #     #     j += 1
-        #     product = a.find('span', attrs={'class': 'truncate-2 db webkit-box-ns oz kH oV h2-ns g ht b uD'})
-        #     result.products.append(product.text) if product != None else False
-        #     price = a.find('div', attrs={'class': 'a- db ue iR'})
-        #     result.prices.append(price.text) if product != None else False
-        # for a in soup.find_all('div', attrs={'class': 'N'}):
-        #     product = a.find('span', attrs={'class': 'truncate-2 db webkit-box-ns oz kH oV h2-ns g ht b uD'})
-        #     result['products'].append(product.text) if product != None else False
-        #     price = a.find('div', attrs={'class': 'a- db ue iR'})
-        #     result['prices'].append(price.text) if product != None else False
         result['status'] = "Succeed"
 
     return result
