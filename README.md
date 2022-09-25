@@ -1,2 +1,2 @@
 # ScrapingPrice
-Get data of price for item in iprice
+Get data of price for item in iprice.co.id
