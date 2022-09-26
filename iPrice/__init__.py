@@ -1,46 +1,58 @@
 from bs4 import BeautifulSoup
 import requests
 
+class getPrice:
 
-def search():
-    properties = {"item":"","browser":""}
-    properties['item'] = "apple-iphone-13-mini"
-    # properties['item'] = input('What are you looking for? :')
-    # properties['browser'] = input('What browser are use? :')
-    return properties
+    def __init__(self,item):
+        self.title = 'Product Price Comparison'
+        self.description = 'to check price for any item in many market place'
+        self.result = {"title": "", "content": [], "status": ""}
+        self.url = "https://iprice.co.id"
+        self.item = item
+        self.headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:96.0) Gecko/20100101 Firefox/96.0'}
 
-def extract(input):
-    try:
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:96.0) Gecko/20100101 Firefox/96.0'
-        }
-        HOST = "https://iprice.co.id"
-        PAGE = f"harga/{input['item']}/"
-        with requests.Session() as session:
-            content = session.get(f'{HOST}/{PAGE}', headers=headers)
-    except Exception:
-        content = None
-    result = {"title": "", "content": [], "status": ""}
-    if content == None:
-        result.status = "Failed"
-    else:
-        soup = BeautifulSoup(content.text,"html.parser")
-        result['title'] = soup.find('title').text
-        soup = soup.find('div',{'class':'default-offers'})
-        products = soup.findAll('div', {'class': 'r2 oU I'})
-        for i in products:
-            dictOfContent = {"product":"", "price":"", "link":""}
-            dictOfContent['product'] = i.find('p',{'class': "oz b R e3"}).text
-            dictOfContent['price'] = i.find('div', {'class': 'vb f24 b gM c2'}).text
-            dictOfContent['link'] = 'iprice.co.id' + i.find('a', href=True)['href']
-            result['content'].append(dictOfContent)
-        result['status'] = "Succeed"
+    def extract(self):
+        try:
+            PAGE = f"harga/{self.item}/"
+            with requests.Session() as session:
+                content = session.get(f'{self.url}/{PAGE}', headers=self.headers)
+        except Exception:
+            content = 'invalid format'
+        if content != 'invalid format':
+            if content.status_code == 200:
+                soup = BeautifulSoup(content.text, "html.parser")
+                self.result['title'] = soup.find('title').text
+                soup = soup.find('div', {'class': 'default-offers'})
+                products = soup.findAll('div', {'class': 'r2 oU I'})
+                for i in products:
+                    dictOfContent = {"product": "", "price": "", "link": ""}
+                    dictOfContent['product'] = i.find('p', {'class': "oz b R e3"}).text
+                    dictOfContent['price'] = i.find('div', {'class': 'vb f24 b gM c2'}).text
+                    dictOfContent['link'] = 'iprice.co.id' + i.find('a', href=True)['href']
+                    self.result['content'].append(dictOfContent)
+                self.result['status'] = "Succeed"
+            else:
+                self.result['status'] = content.status_code
 
-    return result
+        else:
+            self.result['status'] = content
 
-def view(result):
-    print(result['title'])
-    # print(result['content'])
-    for i in result['content']:
-        print(i)
-    print(result['status'])
+        return self.result
+
+    def view(self):
+        print(self.result['title'])
+        for i in self.result['content']:
+            print(i)
+        print(self.result['status'])
+
+    def run(self):
+        self.extract()
+        self.view()
+
+
+
+if __name__ == '__main__':
+    list_price = getPrice('apple-iphone-13-mini')
+    print(list_price.title)
+    print(list_price.description)
+    list_price.run()
