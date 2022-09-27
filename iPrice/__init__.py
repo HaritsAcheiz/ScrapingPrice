@@ -1,15 +1,28 @@
 from bs4 import BeautifulSoup
 import requests
 
-class getPrice:
-
-    def __init__(self,item):
+class iPrice:
+    def __init__(self,item,description):
         self.title = 'Product Price Comparison'
-        self.description = 'to check price for any item in many market place'
+        self.description = description
         self.result = {"title": "", "content": [], "status": ""}
         self.url = "https://iprice.co.id"
         self.item = item
         self.headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:96.0) Gecko/20100101 Firefox/96.0'}
+
+    def extract(self):
+        pass
+
+    def viev(self):
+        pass
+
+    def run(self):
+        self.extract()
+        self.view()
+
+class getPrice (iPrice):
+    def __init__(self,item):
+        super(getPrice,self).__init__(item,'To check price for any item in many market place')
 
     def extract(self):
         try:
@@ -45,14 +58,9 @@ class getPrice:
             print(i)
         print(self.result['status'])
 
-    def run(self):
-        self.extract()
-        self.view()
-
-
 
 if __name__ == '__main__':
-    list_price = getPrice('apple-iphone-13-mini')
+    list_price = getPrice('samsung-galaxy-a10')
     print(list_price.title)
     print(list_price.description)
     list_price.run()
