@@ -57,16 +57,20 @@ class getPrice (iPrice):
         return self.result
 
     def view(self):
-        print(self.result['title'])
-        for i in self.result['content']:
-            print(i)
-        print(self.result['status'])
+        for i in self.result:
+            print(f"\n{i} : ")
+            try:
+                for j in range(len(self.result[i])):
+                    print("\n")
+                    for k in self.result[i][j]:
+                        print(f"{k} : {self.result[i][j][k]}")
+            except:
+                print(f"{i} : {self.result[i]}")
+        # print(self.result['content'][0]['product'])
 
 
 if __name__ == '__main__':
     list_price = getPrice('samsung-galaxy-a10')
-    print(list_price.title)
-    print(list_price.description)
     list_price.run()
     list_key = getKey('samsung')
     print(list_key.title)
