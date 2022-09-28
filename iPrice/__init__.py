@@ -40,7 +40,7 @@ class getKey(iPrice):
 
         if content.status_code == 200:
             soup = BeautifulSoup(content.text, "html.parser")
-            result = soup
+            result = soup.findAll('div', {'class': 'mb3-xs-4x pu kA oT vs vt vn vJ mb3-xs-4x vK'})
         else:
             result = content.status_code
 
@@ -93,8 +93,8 @@ if __name__ == '__main__':
     # list_price = getPrice('samsung-galaxy-a10')
     # list_price.run()
     list_key = getKey('samsung')
-    # print(list_key.title)
-    # print(list_key.description)
+    print(list_key.title)
+    print(list_key.description)
     list_key = list_key.qgen()
     print(list_key)
     # result = getKey.qgen()
