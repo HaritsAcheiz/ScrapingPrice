@@ -12,26 +12,27 @@ class iPrice:
         self.term = term
         self.headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:105.0) Gecko/20100101 Firefox/105.0'}
 
-    def extract(self):
-        print('under construction')
+    def extractKey(self):
+        self.extractKey()
 
-    def view(self):
-        print('under construction')
+    def infoKey(self):
+        self.extractKey()
+        self.viewKey()
 
-    def qgen(self):
-        self.qgen()
+    def extractPrice(self):
+        self.extractPrice()
 
-    def run(self):
-        self.extract()
-        self.view()
+    def infoPrice(self):
+        self.extractPrice()
+        self.viewPrice()
 
 
 
 class getKey(iPrice):
     def __init__(self,term):
-        super(getKey,self).__init__('Search Key Generator','To check key name for searching item',term) #Constructor
+        super(getKey,self).__init__('Search Key Generator','To check keyword for getPrice',term) #Constructor
 
-    def qgen(self):
+    def extractKey(self):
         try:
             with requests.Session() as session:
                 content = session.get(f'{self.scheme}://{self.host}{self.filename}?term={self.term}', headers=self.headers)
@@ -46,20 +47,22 @@ class getKey(iPrice):
 
         return result
 
+    # def viewKey(self):
+
 class getPrice (iPrice):
     def __init__(self,term):
-        super(getPrice,self).__init__('\nProduct Price Comparison','To check price for any item in many market place',term) #Constructor
+        super(getPrice,self).__init__('Product Price Comparison','To check price for any item in many market place',term) #Constructor
 
-    def extract(self):
+    def extractPrice(self):
         try:
             with requests.Session() as session:
-                content = session.get(f'{self.scheme}://{self.host}/harga/{self.term}', headers=self.headers)
+                content = session.get(f'{self.scheme}://{self.host}/harga/{self.term}/', headers=self.headers)
         except Exception:
             content = 'invalid format'
         if content != 'invalid format':
             if content.status_code == 200:
                 soup = BeautifulSoup(content.text, "html.parser")
-                self.result['title'] = soup.find('title').text
+                self.result['title'] = soup.find('h1').text
                 soup = soup.find('div', {'class': 'default-offers'})
                 products = soup.findAll('div', {'class': 'r2 oU I'})
                 for i in products:
@@ -77,12 +80,11 @@ class getPrice (iPrice):
 
         return self.result
 
-    def view(self):
+    def viewPrice(self):
         for i in self.result:
-            print(f"\n{i} : ")
             try:
                 for j in range(len(self.result[i])):
-                    print("\n")
+                    print('\n')
                     for k in self.result[i][j]:
                         print(f"{k} : {self.result[i][j][k]}")
             except:
@@ -90,13 +92,13 @@ class getPrice (iPrice):
 
 
 if __name__ == '__main__':
-    # list_price = getPrice('samsung-galaxy-a10')
-    # list_price.run()
-    list_key = getKey('samsung')
-    print(list_key.title)
-    print(list_key.description)
-    list_key = list_key.qgen()
-    print(list_key)
+    prices = getPrice('samsung-galaxy-a10')
+    prices.infoPrice()
+    # list_key = getKey('samsung')
+    # print(list_key.title)
+    # print(list_key.description)
+    # list_key = list_key.qgen()
+    # print(list_key)
     # result = getKey.qgen()
 
     # print(f'hasil adalah {result}')
