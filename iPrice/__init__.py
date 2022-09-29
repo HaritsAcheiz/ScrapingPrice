@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import json
 import os
+import pandas as pd
 
 class iPrice:
     def __init__(self,title,description):
@@ -93,8 +94,16 @@ class getPrice (iPrice):
             except:
                 print(f"{i} : {self.result[i]}")
 
-    def toJson(self,filepath):
+    def toFile(self,filepath):
+        format = filepath.split('.')[1]
         if not os.path.exists(os.path.dirname(filepath)):
             os.makedirs(os.path.dirname(filepath))
-        with open (filepath,"w+") as f:
-            json.dump(self.result,f)
+        if format == 'json':
+            with open (filepath,"w+") as f:
+                json.dump(self.result['content'],f)
+        if format == 'csv':
+            df = pd.DataFrame(self.result['content'])
+            df.to_csv(filepath, index = False)
+        if format == 'excel':
+            df = pd.DataFrame(self.result['content'])
+            df.to_excel(filepath, index = False)

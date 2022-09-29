@@ -8,6 +8,6 @@ if __name__ == '__main__':
     # prices = getPrice('samsung-galaxy-a10')
     prices = iPrice.getPrice()
     prices.infoPrice('samsung-galaxy-a10')
-    prices.toJson('test/samsung galaxy a10.json')
+    prices.toFile('test/samsung galaxy a10.csv')
     # keys = getKey('samsung')
     # prices.infoKey()
