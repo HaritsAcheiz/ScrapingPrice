@@ -3,8 +3,11 @@ This program will get price of an item that you want to know.
 """
 import iPrice
 
+
 if __name__ == '__main__':
-    list_price = iPrice.getPrice('apple-iphone-13-mini')
-    print(list_price.title)
-    print(list_price.description)
-    list_price.run()
+    # prices = getPrice('samsung-galaxy-a10')
+    prices = iPrice.getPrice()
+    prices.infoPrice('samsung-galaxy-a10')
+    prices.toJson('result/samsung galaxy a10.json')
+    # keys = getKey('samsung')
+    # prices.infoKey()

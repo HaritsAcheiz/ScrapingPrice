@@ -1,15 +1,16 @@
 from bs4 import BeautifulSoup
 import requests
+import json
+import os
 
 class iPrice:
-    def __init__(self,title,description,term):
+    def __init__(self,title,description):
         self.title = title
         self.description = description
         self.result = {"title": "", "content": [], "status": ""}
         self.scheme = "https"
         self.host = "iprice.co.id"
         self.filename = "/search/"
-        self.term = term
         self.headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:105.0) Gecko/20100101 Firefox/105.0'}
 
     def extractKey(self):
@@ -22,8 +23,8 @@ class iPrice:
     def extractPrice(self):
         self.extractPrice()
 
-    def infoPrice(self):
-        self.extractPrice()
+    def infoPrice(self,term):
+        self.extractPrice(term)
         self.viewPrice()
 
 
@@ -50,13 +51,15 @@ class getKey(iPrice):
     # def viewKey(self):
 
 class getPrice (iPrice):
-    def __init__(self,term):
-        super(getPrice,self).__init__('Product Price Comparison','To check price for any item in many market place',term) #Constructor
+    def __init__(self):
+        super(getPrice,self).__init__(
+            'Product Price Comparison',
+            'To check price for any item in many market place') #Constructor
 
-    def extractPrice(self):
+    def extractPrice(self,term):
         try:
             with requests.Session() as session:
-                content = session.get(f'{self.scheme}://{self.host}/harga/{self.term}/', headers=self.headers)
+                content = session.get(f'{self.scheme}://{self.host}/harga/{term}/', headers=self.headers)
         except Exception:
             content = 'invalid format'
         if content != 'invalid format':
@@ -90,15 +93,12 @@ class getPrice (iPrice):
             except:
                 print(f"{i} : {self.result[i]}")
 
+    def toJson(self,path):
+        try:
+            os.mkdir(path.split('/')[0])
+        except:
+            pass
 
-if __name__ == '__main__':
-    prices = getPrice('samsung-galaxy-a10')
-    prices.infoPrice()
-    # list_key = getKey('samsung')
-    # print(list_key.title)
-    # print(list_key.description)
-    # list_key = list_key.qgen()
-    # print(list_key)
-    # result = getKey.qgen()
-
-    # print(f'hasil adalah {result}')
+        with open(f"{path.split('/')[1]}", "w+") as f:
+            json.dump(self.result,f)
+            print(f"{path.split('/')[0]} created")
