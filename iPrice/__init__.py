@@ -93,12 +93,8 @@ class getPrice (iPrice):
             except:
                 print(f"{i} : {self.result[i]}")
 
-    def toJson(self,path):
-        try:
-            os.mkdir(path.split('/')[0])
-        except:
-            pass
-
-        with open(f"{path.split('/')[1]}", "w+") as f:
+    def toJson(self,filepath):
+        if not os.path.exists(os.path.dirname(filepath)):
+            os.makedirs(os.path.dirname(filepath))
+        with open (filepath,"w+") as f:
             json.dump(self.result,f)
-            print(f"{path.split('/')[0]} created")
