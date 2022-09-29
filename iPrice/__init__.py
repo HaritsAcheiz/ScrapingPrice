@@ -4,40 +4,47 @@ import json
 import os
 import pandas as pd
 
-class iPrice:
-    def __init__(self,title,description):
+
+class IPrice:
+    def __init__(self, title, description, filename):
         self.title = title
         self.description = description
         self.result = {"title": "", "content": [], "status": ""}
         self.scheme = "https"
+        self.filename = filename
+        # self.pagination = pagination
         self.host = "iprice.co.id"
-        self.filename = "/search/"
-        self.headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:105.0) Gecko/20100101 Firefox/105.0'}
+        self.headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:105.0) Gecko/20100101 Firefox/105.0'}
 
-    def extractKey(self):
-        self.extractKey()
+    def extract_key(self):
+        self.extract_key()
 
-    def infoKey(self):
-        self.extractKey()
-        self.viewKey()
+    def info_key(self):
+        self.extract_key()
+        self.view_key()
 
-    def extractPrice(self):
-        self.extractPrice()
+    def extract_price(self):
+        self.extract_price()
 
-    def infoPrice(self,term):
-        self.extractPrice(term)
-        self.viewPrice()
+    def info_price(self, term):
+        self.extract_price(term)
+        self.view_price()
 
 
 
-class getKey(iPrice):
-    def __init__(self,term):
-        super(getKey,self).__init__('Search Key Generator','To check keyword for getPrice',term) #Constructor
 
-    def extractKey(self):
+class GetKey(IPrice):
+    def __init__(self, term):
+        super(GetKey, self).__init__(title='Search Key Generator',
+                                     description='To check keyword for getPrice',
+                                     filename='search')  # Constructor
+
+    def extract_key(self):
         try:
             with requests.Session() as session:
-                content = session.get(f'{self.scheme}://{self.host}{self.filename}?term={self.term}', headers=self.headers)
+                content = session.get(f'{self.scheme}://{self.host}/{self.filename}/?term={self.term}',
+                                      headers=self.headers)
         except:
             content = 'invalid format'
 
@@ -49,18 +56,22 @@ class getKey(iPrice):
 
         return result
 
-    # def viewKey(self):
+    def view_key(self):
+        pass
 
-class getPrice (iPrice):
+class GetPrice(IPrice):
+    # Constructor
     def __init__(self):
-        super(getPrice,self).__init__(
-            'Product Price Comparison',
-            'To check price for any item in many market place') #Constructor
+        super(GetPrice, self).__init__(
+            title = 'Product Price Comparison',
+            description = 'To check price for any item in many market place',
+            filename = 'harga')
 
-    def extractPrice(self,term):
+    # Function to extract price
+    def extract_price(self, term):
         try:
             with requests.Session() as session:
-                content = session.get(f'{self.scheme}://{self.host}/harga/{term}/', headers=self.headers)
+                content = session.get(f'{self.scheme}://{self.host}/{self.filename}/{term}/', headers=self.headers)
         except Exception:
             content = 'invalid format'
         if content != 'invalid format':
@@ -70,21 +81,21 @@ class getPrice (iPrice):
                 soup = soup.find('div', {'class': 'default-offers'})
                 products = soup.findAll('div', {'class': 'r2 oU I'})
                 for i in products:
-                    dictOfContent = {"product": "", "price": "", "link": ""}
-                    dictOfContent['product'] = i.find('p', {'class': "oz b R e3"}).text
-                    dictOfContent['price'] = i.find('div', {'class': 'vb f24 b gM c2'}).text
-                    dictOfContent['link'] = 'iprice.co.id' + i.find('a', href=True)['href']
-                    self.result['content'].append(dictOfContent)
+                    dictofcontent = {"product": "", "price": "", "link": ""}
+                    dictofcontent['product'] = i.find('p', {'class': "oz b R e3"}).text
+                    dictofcontent['price'] = i.find('div', {'class': 'vb f24 b gM c2'}).text
+                    dictofcontent['link'] = 'iprice.co.id' + i.find('a', href=True)['href']
+                    self.result['content'].append(dictofcontent)
                 self.result['status'] = "Succeed"
             else:
-                self.result['status'] = content.status_code
+                self.result['status'] = str(content.status_code)
 
         else:
             self.result['status'] = content
 
         return self.result
 
-    def viewPrice(self):
+    def view_price(self):
         for i in self.result:
             try:
                 for j in range(len(self.result[i])):
@@ -94,16 +105,16 @@ class getPrice (iPrice):
             except:
                 print(f"{i} : {self.result[i]}")
 
-    def toFile(self,filepath):
-        format = filepath.split('.')[1]
+    def to_file(self, filepath):
+        ext = filepath.split('.')[1]
         if not os.path.exists(os.path.dirname(filepath)):
             os.makedirs(os.path.dirname(filepath))
-        if format == 'json':
-            with open (filepath,"w+") as f:
-                json.dump(self.result['content'],f)
-        if format == 'csv':
+        if ext == 'json':
+            with open(filepath, "w+") as f:
+                json.dump(self.result['content'], f)
+        if ext == 'csv':
             df = pd.DataFrame(self.result['content'])
-            df.to_csv(filepath, index = False)
-        if format == 'excel':
+            df.to_csv(filepath, index=False)
+        if ext == 'excel':
             df = pd.DataFrame(self.result['content'])
-            df.to_excel(filepath, index = False)
+            df.to_excel(filepath, index=False)
